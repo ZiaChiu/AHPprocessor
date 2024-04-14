@@ -4,25 +4,17 @@ import numpy
 import numpy as np
 import pandas as pd
 from fractions import Fraction
-
-# Load the CSV file into a DataFrame
-file = ["CRFM.csv", "ECT.csv", "ELW.csv", "RIS.csv", "SIRM.csv"]
-
 import os
 
-def list_files_and_directories(directory):
+
+def get_csv(directory="."):
+    csv_files = []
     for filename in os.listdir(directory):
         path = os.path.join(directory, filename)
-        if os.path.isdir(path):
-            print(f"Directory: {filename}")
-        else:
-            print(f"File: {filename}")
-
-# 遍历my_directory目录
-print(list_files_and_directories("AHP processor"))
-
-
-
+        if os.path.isfile(path):
+            if ".csv" in filename:
+                csv_files.append(filename)
+    return csv_files
 
 
 class StrToArray:
@@ -158,11 +150,13 @@ def ahp(ar: numpy.ndarray, filename: str):
     print("---------------------------------------------------------------------")
 
 
-# for f in file:
-#     df = pd.read_csv(f, index_col=0)
-#     p_numpy = df.to_numpy()
-#     arr = StrToArray(p_numpy)
-#     arr.float_array()
-#     arr1 = arr.get_array()
-#     ahp(arr1,f)
+# Load the CSV file into a DataFrame
+files = get_csv()
 
+for f in files:
+    df = pd.read_csv(f, index_col=0)
+    p_numpy = df.to_numpy()
+    arr = StrToArray(p_numpy)
+    arr.float_array()
+    arr1 = arr.get_array()
+    ahp(arr1, f)
