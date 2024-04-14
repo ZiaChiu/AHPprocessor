@@ -1,3 +1,5 @@
+import os
+
 import numpy
 import numpy as np
 import pandas as pd
@@ -5,6 +7,23 @@ from fractions import Fraction
 
 # Load the CSV file into a DataFrame
 file = ["CRFM.csv", "ECT.csv", "ELW.csv", "RIS.csv", "SIRM.csv"]
+
+import os
+
+def list_files_and_directories(directory):
+    for filename in os.listdir(directory):
+        path = os.path.join(directory, filename)
+        if os.path.isdir(path):
+            print(f"Directory: {filename}")
+        else:
+            print(f"File: {filename}")
+
+# 遍历my_directory目录
+print(list_files_and_directories("AHP processor"))
+
+
+
+
 
 class StrToArray:
 
@@ -80,7 +99,7 @@ class StrToArray:
         return self.ty_list
 
 
-def ahp(ar: numpy.ndarray,filename:str):
+def ahp(ar: numpy.ndarray, filename: str):
     print(f"filename: {filename}")
 
     # # Define the matrix as a numpy array
@@ -124,7 +143,6 @@ def ahp(ar: numpy.ndarray,filename:str):
     # Calculate the Consistency Ratio (cr)
     cr = ci / ri
 
-
     # Output the results
     print(f"Maximum Eigenvalue: {max_eigenvalue}")
     print(f"Consistency Index (CI): {ci}")
@@ -148,4 +166,3 @@ def ahp(ar: numpy.ndarray,filename:str):
 #     arr1 = arr.get_array()
 #     ahp(arr1,f)
 
-ok
