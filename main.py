@@ -90,64 +90,79 @@ class StrToArray:
     def get_data_type_list(self):
         return self.ty_list
 
+class AHP:
+    def __init__(self,filename,array:numpy.ndarray):
+        self.priority_vector = None
+        self.filename = filename
+        self.arr = array
+        self.normalized_matrix = None
+        self.max_eigenvalue =None
 
-def ahp(ar: numpy.ndarray, filename: str):
-    print(f"filename: {filename}")
+    def get_normalized_matrix(self):
+        return self.normalized_matrix
+    def get_max_eigenvalue(self):
+        return self.max_eigenvalue
 
-    # # Define the matrix as a numpy array
-    matrix = np.array(ar)
+    def get_priority_vector(self):
+        return self.priority_vector
 
-    # Sum the columns
-    column_sums = matrix.sum(axis=0)
 
-    # Normalize the matrix by dividing each element by its column sum
-    normalized_matrix = matrix / column_sums
+    def caculator(self):
+        print(f"filename: {self.filename}")
 
-    # Calculate the priority vector by taking the average of each row in the normalized matrix
-    priority_vector = normalized_matrix.mean(axis=1)
+        # # Define the matrix as a numpy array
+        matrix = np.array(self.arr)
 
-    # Display results
-    # print("Normalized Matrix:\n", normalized_matrix)
-    # print("\nPriority Vector (Weights):\n", priority_vector)
-    print("------------------------------------------------------------")
+        # Sum the columns
+        column_sums = matrix.sum(axis=0)
 
-    # Calculate the eigenvalues and eigenvectors of the matrix
-    eigenvalues, eigenvectors = np.linalg.eig(matrix)
+        # Normalize the matrix by dividing each element by its column sum
+        self.normalized_matrix = matrix / column_sums
 
-    # Find the maximum eigenvalue
-    max_eigenvalue = np.max(np.real(eigenvalues))
-    print(f"Max Eigenvalue:{max_eigenvalue}\n")
+        # Calculate the priority vector by taking the average of each row in the normalized matrix
+        self.priority_vector = self.normalized_matrix.mean(axis=1)
 
-    # Calculate the size of the matrix (n)
-    n = matrix.shape[0]
-    print(f"n:{n}")
+        # Display results
+        print("Normalized Matrix:\n", self.normalized_matrix)
+        print("\nPriority Vector (Weights):\n", self.priority_vector)
+        print("------------------------------------------------------------")
 
-    # Define the Random Index (ri) for matrices up to order 10
-    ri_values = [0, 0, 0.58, 0.9, 1.12, 1.24, 1.32, 1.41, 1.45, 1.49]
+        # Calculate the eigenvalues and eigenvectors of the matrix
+        eigenvalues, eigenvectors = np.linalg.eig(matrix)
 
-    # Calculate the Consistency Index (ci)
-    ci = (max_eigenvalue - n) / (n - 1)
+        # Find the maximum eigenvalue
+        self.max_eigenvalue = np.max(np.real(eigenvalues))
 
-    # Determine the Random Index (ri) based on the size of the matrix
-    ri = ri_values[n - 1] if n - 1 < len(ri_values) else 1.49
-    # default to the last known ri value if n is out of range
+        # Calculate the size of the matrix (n)
+        n = matrix.shape[0]
 
-    # Calculate the Consistency Ratio (cr)
-    cr = ci / ri
+        # Define the Random Index (ri) for matrices up to order 10
+        ri_values = [0, 0, 0.58, 0.9, 1.12, 1.24, 1.32, 1.41, 1.45, 1.49]
 
-    # Output the results
-    print(f"Maximum Eigenvalue: {max_eigenvalue}")
-    print(f"Consistency Index (CI): {ci}")
-    print(f"Random Index (RI): {ri}")
-    print(f"Consistency Ratio (CR): {cr}")
+        # Calculate the Consistency Index (ci)
+        self.ci = (self.max_eigenvalue - n) / (n - 1)
 
-    # Checking the consistency
-    if cr < 0.1:
-        print("The matrix is consistent.")
-    else:
-        print("The matrix is not consistent. Review comparisons.")
+        # Determine the Random Index (ri) based on the size of the matrix
+        self.ri = ri_values[n - 1] if n - 1 < len(ri_values) else 1.49
+        # default to the last known ri value if n is out of range
 
-    print("---------------------------------------------------------------------")
+        # Calculate the Consistency Ratio (cr)
+        self.cr = self.ci / self.ri
+
+        # Output the results
+        print(f"Maximum Eigenvalue: {self.max_eigenvalue}")
+        print(f"Consistency Index (CI): {self.ci}")
+        print(f"Random Index (RI): {self.ri}")
+        print(f"Consistency Ratio (CR): {self.cr}")
+
+        # Checking the consistency
+        if self.cr < 0.1:
+            print("The matrix is consistent.")
+        else:
+            print("The matrix is not consistent. Review comparisons.")
+
+        print("---------------------------------------------------------------------")
+
 
 
 # Load the CSV file into a DataFrame
@@ -159,4 +174,4 @@ for f in files:
     arr = StrToArray(p_numpy)
     arr.float_array()
     arr1 = arr.get_array()
-    ahp(arr1, f)
+    AHP(f,arr1).caculator()
